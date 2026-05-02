@@ -30,9 +30,9 @@ STATUS_LABELS = {
 }
 
 STATUS_COLORS = {
-    "Reported": "#D94B45",
-    "In Progress": "#D99A22",
-    "Closed": "#258B62",
+    "Reported": "#df5c4f",
+    "In Progress": "#d99a22",
+    "Closed": "#2f9d68",
 }
 
 ZONE_OPTIONS = {
@@ -43,33 +43,58 @@ ZONE_OPTIONS = {
     "library": "Library",
 }
 
+ZONE_DESCRIPTIONS = {
+    "Main Building": "Academic hub",
+    "Dormitory": "Residential safety",
+    "Sports Complex": "Athletics and events",
+    "Cafeteria": "Food service area",
+    "Library": "Study spaces",
+}
+
 
 def inject_styles() -> None:
     st.markdown(
         """
         <style>
         :root {
-            --ink: #18212f;
-            --muted: #687182;
-            --line: #dce2ea;
+            --ink: #17202d;
+            --ink-2: #283447;
+            --muted: #667487;
+            --line: #d8e1ea;
             --panel: #ffffff;
-            --wash: #f5f7fa;
-            --accent: #1f7a8c;
-            --danger: #d94b45;
+            --panel-soft: #f8fbfc;
+            --wash: #eef4f7;
+            --accent: #16798c;
+            --accent-2: #26a69a;
+            --danger: #df5c4f;
             --amber: #d99a22;
-            --green: #258b62;
+            --green: #2f9d68;
+            --blue: #3c6df0;
+            --shadow: 0 18px 45px rgba(23, 32, 45, 0.08);
+            --shadow-soft: 0 10px 26px rgba(23, 32, 45, 0.055);
         }
 
         .stApp {
             background:
-                radial-gradient(circle at top left, rgba(31, 122, 140, 0.10), transparent 34rem),
-                linear-gradient(180deg, #f7f9fb 0%, #eef3f6 100%);
+                linear-gradient(135deg, rgba(22, 121, 140, 0.10) 0%, transparent 34%),
+                linear-gradient(180deg, #f7fafc 0%, #edf4f7 100%);
             color: var(--ink);
         }
 
+        header[data-testid="stHeader"] {
+            background: rgba(247, 250, 252, 0.82);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(216, 225, 234, 0.72);
+        }
+
         [data-testid="stSidebar"] {
-            background: #f8fafc;
+            background:
+                linear-gradient(180deg, #ffffff 0%, #f2f7f9 100%);
             border-right: 1px solid var(--line);
+        }
+
+        [data-testid="stSidebar"] > div:first-child {
+            padding-top: 1.3rem;
         }
 
         [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
@@ -78,9 +103,9 @@ def inject_styles() -> None:
         }
 
         .block-container {
-            padding-top: 2.2rem;
-            padding-bottom: 3rem;
-            max-width: 1260px;
+            padding-top: 4.25rem;
+            padding-bottom: 3.8rem;
+            max-width: 1240px;
         }
 
         h1, h2, h3 {
@@ -89,67 +114,426 @@ def inject_styles() -> None:
         }
 
         h1 {
-            font-size: 2.3rem;
-            line-height: 1.06;
-            margin-bottom: 0.25rem;
+            font-size: 2.45rem;
+            line-height: 1.12;
+            margin-bottom: 0.4rem;
         }
 
         h2 {
             margin-top: 0.6rem;
         }
 
+        div[data-testid="stMarkdownContainer"] p {
+            line-height: 1.55;
+        }
+
+        .sidebar-brand {
+            padding: 0.9rem 0.9rem 1rem;
+            background: #ffffff;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-brand-title {
+            font-size: 1.02rem;
+            font-weight: 900;
+            color: var(--ink);
+            line-height: 1.2;
+            margin-bottom: 0.35rem;
+        }
+
+        .sidebar-brand-subtitle {
+            color: var(--muted);
+            font-size: 0.84rem;
+            line-height: 1.45;
+        }
+
+        .sidebar-label {
+            color: var(--muted);
+            font-size: 0.72rem;
+            font-weight: 850;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin: 1.1rem 0 0.45rem;
+        }
+
+        .sidebar-stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.5rem;
+            margin: 0.8rem 0 0.9rem;
+        }
+
+        .sidebar-stat {
+            background: #ffffff;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 0.65rem 0.7rem;
+        }
+
+        .sidebar-stat-value {
+            font-size: 1.15rem;
+            font-weight: 900;
+            color: var(--ink);
+            line-height: 1;
+        }
+
+        .sidebar-stat-label {
+            color: var(--muted);
+            font-size: 0.72rem;
+            margin-top: 0.28rem;
+        }
+
+        [data-testid="stSidebar"] div[role="radiogroup"] {
+            gap: 0.35rem;
+        }
+
+        [data-testid="stSidebar"] label[data-baseweb="radio"] {
+            background: rgba(255, 255, 255, 0.68);
+            border: 1px solid transparent;
+            border-radius: 8px;
+            padding: 0.42rem 0.52rem;
+            transition: all 130ms ease;
+        }
+
+        [data-testid="stSidebar"] label[data-baseweb="radio"]:hover {
+            background: #ffffff;
+            border-color: var(--line);
+        }
+
+        [data-testid="stSidebar"] label[data-baseweb="radio"]:has(input:checked) {
+            background: #e8f4f6;
+            border-color: #a8d3db;
+            box-shadow: inset 3px 0 0 var(--accent);
+        }
+
+        .hero-shell {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(196, 214, 222, 0.88);
+            border-radius: 8px;
+            background:
+                linear-gradient(110deg, rgba(255, 255, 255, 0.98), rgba(239, 249, 250, 0.94) 62%, rgba(232, 242, 246, 0.94)),
+                linear-gradient(90deg, rgba(22, 121, 140, 0.12), rgba(223, 92, 79, 0.05));
+            box-shadow: var(--shadow);
+            padding: clamp(1.25rem, 2.5vw, 2.05rem);
+            margin-bottom: 1.25rem;
+        }
+
+        .hero-shell:after {
+            content: "";
+            position: absolute;
+            right: -4rem;
+            top: -6rem;
+            width: 18rem;
+            height: 18rem;
+            background:
+                linear-gradient(135deg, rgba(22, 121, 140, 0.12), rgba(47, 157, 104, 0.06));
+            border: 1px solid rgba(22, 121, 140, 0.08);
+            transform: rotate(20deg);
+            border-radius: 8px;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 850px;
+        }
+
         .app-kicker {
             color: var(--accent);
-            font-size: 0.78rem;
-            font-weight: 800;
-            letter-spacing: 0.06em;
+            font-size: 0.76rem;
+            line-height: 1.45;
+            font-weight: 900;
+            letter-spacing: 0.085em;
             text-transform: uppercase;
-            margin-bottom: 0.35rem;
+            margin-bottom: 0.52rem;
+        }
+
+        .hero-title {
+            color: var(--ink);
+            font-size: clamp(2rem, 4.4vw, 4.05rem);
+            font-weight: 950;
+            line-height: 1.02;
+            letter-spacing: 0;
+            max-width: 760px;
+            margin: 0 0 0.78rem;
         }
 
         .app-subtitle {
             color: var(--muted);
-            font-size: 1.04rem;
+            font-size: clamp(1rem, 1.4vw, 1.12rem);
+            max-width: 710px;
+            margin: 0 0 1.15rem;
+            line-height: 1.62;
+        }
+
+        .hero-meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem;
+            margin-top: 0.95rem;
+        }
+
+        .hero-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            min-height: 2.15rem;
+            padding: 0.42rem 0.74rem;
+            border-radius: 999px;
+            border: 1px solid #c5dbe2;
+            background: rgba(255, 255, 255, 0.72);
+            color: var(--ink-2);
+            font-size: 0.84rem;
+            font-weight: 800;
+        }
+
+        .hero-pill-dot {
+            width: 0.55rem;
+            height: 0.55rem;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 0 4px rgba(47, 157, 104, 0.13);
+        }
+
+        .section-heading {
+            margin: 1.35rem 0 0.85rem;
+        }
+
+        .section-eyebrow {
+            color: var(--accent);
+            font-size: 0.73rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            line-height: 1.4;
+            margin-bottom: 0.2rem;
+        }
+
+        .section-title {
+            color: var(--ink);
+            font-size: clamp(1.28rem, 2vw, 1.72rem);
+            font-weight: 900;
+            line-height: 1.22;
+            margin: 0;
+        }
+
+        .section-copy {
+            color: var(--muted);
+            font-size: 0.95rem;
+            margin-top: 0.25rem;
             max-width: 760px;
-            margin-bottom: 1.35rem;
+        }
+
+        .metric-grid {
+            margin-top: 0.2rem;
         }
 
         .metric-card {
-            background: rgba(255, 255, 255, 0.92);
+            position: relative;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.96);
             border: 1px solid var(--line);
             border-radius: 8px;
-            padding: 1rem 1.05rem;
-            box-shadow: 0 16px 35px rgba(24, 33, 47, 0.06);
-            min-height: 118px;
+            padding: 1.05rem;
+            box-shadow: var(--shadow-soft);
+            min-height: 130px;
+        }
+
+        .metric-card:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+        }
+
+        .metric-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.65rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 8px;
+            background: #e8f4f6;
+            color: var(--accent);
+            font-size: 0.78rem;
+            font-weight: 900;
+            border: 1px solid #c6dde4;
         }
 
         .metric-label {
             color: var(--muted);
-            font-size: 0.78rem;
-            font-weight: 700;
+            font-size: 0.74rem;
+            font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.07em;
+            line-height: 1.35;
         }
 
         .metric-value {
             color: var(--ink);
-            font-size: 2.15rem;
-            line-height: 1;
-            font-weight: 800;
-            margin: 0.35rem 0 0.2rem;
+            font-size: clamp(2rem, 3vw, 2.65rem);
+            line-height: 1.02;
+            font-weight: 950;
+            margin: 0.2rem 0 0.3rem;
         }
 
         .metric-note {
             color: var(--muted);
             font-size: 0.88rem;
+            line-height: 1.45;
         }
 
-        .section-panel {
-            background: rgba(255, 255, 255, 0.88);
+        .panel {
+            background: rgba(255, 255, 255, 0.94);
             border: 1px solid var(--line);
             border-radius: 8px;
-            padding: 1rem;
-            box-shadow: 0 16px 35px rgba(24, 33, 47, 0.045);
+            padding: clamp(0.95rem, 1.6vw, 1.25rem);
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 1rem;
+        }
+
+        .welcome-band {
+            margin-top: 1rem;
+            background:
+                linear-gradient(120deg, rgba(23, 32, 45, 0.95), rgba(28, 69, 82, 0.94)),
+                linear-gradient(90deg, rgba(22, 121, 140, 0.28), rgba(223, 92, 79, 0.18));
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: clamp(1.1rem, 2.2vw, 1.55rem);
+        }
+
+        .welcome-title {
+            font-size: clamp(1.35rem, 2.4vw, 1.9rem);
+            line-height: 1.18;
+            font-weight: 950;
+            margin: 0 0 0.4rem;
+        }
+
+        .welcome-copy {
+            color: rgba(255, 255, 255, 0.78);
+            max-width: 760px;
+            line-height: 1.58;
+            margin-bottom: 1rem;
+        }
+
+        .step-row {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.7rem;
+        }
+
+        .step-item {
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 0.85rem;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.65rem;
+            height: 1.65rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.14);
+            color: #ffffff;
+            font-size: 0.8rem;
+            font-weight: 900;
+            margin-bottom: 0.55rem;
+        }
+
+        .step-title {
+            font-weight: 900;
+            margin-bottom: 0.2rem;
+        }
+
+        .step-copy {
+            color: rgba(255, 255, 255, 0.72);
+            font-size: 0.88rem;
+            line-height: 1.45;
+        }
+
+        .zone-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+
+        .zone-card {
+            background: #ffffff;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 0.95rem;
+            box-shadow: var(--shadow-soft);
+            min-height: 112px;
+        }
+
+        .zone-index {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.7rem;
+            height: 1.7rem;
+            border-radius: 8px;
+            background: #eef7f8;
+            color: var(--accent);
+            font-size: 0.76rem;
+            font-weight: 950;
+            margin-bottom: 0.55rem;
+        }
+
+        .zone-title {
+            color: var(--ink);
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 0.2rem;
+        }
+
+        .zone-copy {
+            color: var(--muted);
+            font-size: 0.86rem;
+            line-height: 1.45;
+        }
+
+        .empty-state {
+            background: rgba(255, 255, 255, 0.94);
+            border: 1px solid var(--line);
+            border-left: 5px solid var(--accent);
+            border-radius: 8px;
+            padding: 1rem 1.05rem;
+            box-shadow: var(--shadow-soft);
+            color: var(--ink);
+        }
+
+        .empty-state-title {
+            font-weight: 900;
+            font-size: 1rem;
+            margin-bottom: 0.22rem;
+        }
+
+        .empty-state-copy {
+            color: var(--muted);
+            font-size: 0.92rem;
+            line-height: 1.52;
         }
 
         .incident-card {
@@ -157,22 +541,24 @@ def inject_styles() -> None:
             border: 1px solid var(--line);
             border-left: 5px solid var(--accent);
             border-radius: 8px;
-            padding: 0.95rem 1rem;
-            margin-bottom: 0.75rem;
-            box-shadow: 0 12px 26px rgba(24, 33, 47, 0.045);
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            box-shadow: var(--shadow-soft);
         }
 
         .incident-title {
             color: var(--ink);
-            font-size: 1.05rem;
-            font-weight: 800;
+            font-size: 1.02rem;
+            font-weight: 900;
+            line-height: 1.35;
             margin-bottom: 0.25rem;
         }
 
         .incident-meta {
             color: var(--muted);
             font-size: 0.86rem;
-            margin-bottom: 0.6rem;
+            line-height: 1.45;
+            margin-bottom: 0.65rem;
         }
 
         .incident-desc {
@@ -185,17 +571,18 @@ def inject_styles() -> None:
             display: inline-flex;
             align-items: center;
             border-radius: 999px;
-            padding: 0.22rem 0.62rem;
-            font-size: 0.78rem;
-            font-weight: 800;
+            padding: 0.24rem 0.64rem;
+            font-size: 0.76rem;
+            line-height: 1.25;
+            font-weight: 900;
             margin-right: 0.35rem;
             border: 1px solid transparent;
         }
 
         .chip-reported {
-            color: #8f2924;
-            background: #fde7e4;
-            border-color: #f8c7c2;
+            color: #96352d;
+            background: #fdecea;
+            border-color: #f6c7c2;
         }
 
         .chip-progress {
@@ -216,6 +603,12 @@ def inject_styles() -> None:
             border-color: #c4dbe2;
         }
 
+        .table-caption {
+            color: var(--muted);
+            font-size: 0.88rem;
+            margin: -0.25rem 0 0.6rem;
+        }
+
         div[data-testid="stMetric"] {
             background: rgba(255, 255, 255, 0.92);
             border: 1px solid var(--line);
@@ -231,29 +624,61 @@ def inject_styles() -> None:
 
         .stButton > button,
         .stDownloadButton > button {
-            border-radius: 7px;
+            min-height: 2.65rem;
+            border-radius: 8px;
             border: 1px solid #1f7a8c;
-            background: #1f7a8c;
+            background: linear-gradient(180deg, #238da0 0%, #16798c 100%);
             color: #ffffff;
-            font-weight: 800;
+            font-weight: 900;
+            box-shadow: 0 10px 18px rgba(22, 121, 140, 0.18);
+            transition: all 130ms ease;
         }
 
         .stButton > button:hover,
         .stDownloadButton > button:hover {
-            border-color: #145d6b;
-            background: #145d6b;
+            border-color: #126578;
+            background: linear-gradient(180deg, #1d8194 0%, #126578 100%);
             color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 14px 24px rgba(22, 121, 140, 0.22);
+        }
+
+        .stButton > button:disabled {
+            box-shadow: none;
+        }
+
+        .stTextInput input,
+        .stTextArea textarea,
+        [data-baseweb="select"] > div {
+            border-radius: 8px;
+            border-color: #cfdbe4;
+            background-color: #ffffff;
+        }
+
+        .stTextInput input:focus,
+        .stTextArea textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(22, 121, 140, 0.12);
+        }
+
+        label, .stSelectbox label, .stTextInput label, .stTextArea label, .stMultiSelect label {
+            font-weight: 800;
+            color: var(--ink-2);
         }
 
         .stTabs [data-baseweb="tab-list"] {
             gap: 0.35rem;
+            border-bottom: 1px solid var(--line);
         }
 
         .stTabs [data-baseweb="tab"] {
-            border-radius: 7px;
-            padding: 0.55rem 0.8rem;
+            border-radius: 8px 8px 0 0;
+            padding: 0.62rem 0.85rem;
             background: #ffffff;
             border: 1px solid var(--line);
+            border-bottom: none;
+            color: var(--ink-2);
+            font-weight: 850;
         }
 
         .stTabs [aria-selected="true"] {
@@ -261,13 +686,49 @@ def inject_styles() -> None:
             border-color: #9ec8d2;
         }
 
+        div[data-testid="stDataFrame"] {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
+        }
+
+        div[data-testid="stAlert"] {
+            border-radius: 8px;
+        }
+
         @media (max-width: 800px) {
+            .block-container {
+                padding-top: 3.45rem;
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
             h1 {
                 font-size: 1.75rem;
             }
 
+            .hero-shell {
+                padding: 1.05rem;
+            }
+
             .app-subtitle {
                 font-size: 0.96rem;
+            }
+
+            .step-row,
+            .zone-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .metric-card {
+                min-height: 112px;
+            }
+        }
+
+        @media (min-width: 801px) and (max-width: 1120px) {
+            .zone-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
             }
         }
         </style>
@@ -478,20 +939,70 @@ def seed_demo_workspace() -> None:
     st.cache_data.clear()
 
 
-def render_header() -> None:
-    st.markdown('<div class="app-kicker">University Safety Operations</div>', unsafe_allow_html=True)
-    st.title("Campus Incident Command")
+def snapshot_counts(snapshot: dict[str, pd.DataFrame]) -> dict[str, int | str]:
+    incidents = snapshot["incidents"]
+    users = snapshot["users"]
+    total = len(incidents)
+    active = int((incidents["status"] != "Closed").sum()) if not incidents.empty else 0
+    closed = int((incidents["status"] == "Closed").sum()) if not incidents.empty else 0
+    responders = int((users["role"] == "Responder").sum()) if not users.empty else 0
+    resolution = f"{round((closed / total) * 100)}%" if total else "0%"
+    return {
+        "total": total,
+        "active": active,
+        "closed": closed,
+        "responders": responders,
+        "resolution": resolution,
+    }
+
+
+def render_header(snapshot: dict[str, pd.DataFrame]) -> None:
+    counts = snapshot_counts(snapshot)
     st.markdown(
-        '<div class="app-subtitle">Report, triage, assign, and monitor campus incidents from one polished operational dashboard powered by the existing FastAPI backend.</div>',
+        f"""
+        <section class="hero-shell">
+            <div class="hero-content">
+                <div class="app-kicker">University Safety Operations</div>
+                <h1 class="hero-title">Campus Incident Command</h1>
+                <p class="app-subtitle">
+                    A calm, focused workspace for reporting incidents, assigning responders,
+                    and monitoring campus risk across priority zones.
+                </p>
+                <div class="hero-meta-row">
+                    <span class="hero-pill"><span class="hero-pill-dot"></span>Live workspace</span>
+                    <span class="hero-pill">{counts["active"]} active incidents</span>
+                    <span class="hero-pill">{counts["responders"]} responders listed</span>
+                    <span class="hero-pill">Updated {escape(datetime.now().strftime("%b %d, %H:%M"))}</span>
+                </div>
+            </div>
+        </section>
+        """,
         unsafe_allow_html=True,
     )
 
 
-def render_metric(label: str, value: str | int, note: str) -> None:
+def render_section_heading(eyebrow: str, title: str, copy: str | None = None) -> None:
+    copy_html = f'<div class="section-copy">{escape(copy)}</div>' if copy else ""
+    st.markdown(
+        f"""
+        <div class="section-heading">
+            <div class="section-eyebrow">{escape(eyebrow)}</div>
+            <h2 class="section-title">{escape(title)}</h2>
+            {copy_html}
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def render_metric(label: str, value: str | int, note: str, icon: str) -> None:
     st.markdown(
         f"""
         <div class="metric-card">
-            <div class="metric-label">{escape(str(label))}</div>
+            <div class="metric-top">
+                <div class="metric-label">{escape(str(label))}</div>
+                <div class="metric-icon">{escape(icon)}</div>
+            </div>
             <div class="metric-value">{escape(str(value))}</div>
             <div class="metric-note">{escape(str(note))}</div>
         </div>
@@ -501,7 +1012,105 @@ def render_metric(label: str, value: str | int, note: str) -> None:
 
 
 def render_empty_state(title: str, body: str) -> None:
-    st.info(f"{title} {body}")
+    st.markdown(
+        f"""
+        <div class="empty-state">
+            <div class="empty-state-title">{escape(title)}</div>
+            <div class="empty-state-copy">{escape(body)}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def render_welcome_empty_dashboard() -> None:
+    st.markdown(
+        """
+        <section class="welcome-band">
+            <div class="welcome-title">Your command center is ready.</div>
+            <div class="welcome-copy">
+                Start with a clean workspace, add the campus team, then report the first incident.
+                The dashboard will immediately populate with status, zone, and audit views.
+            </div>
+            <div class="step-row">
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Create roles</div>
+                    <div class="step-copy">Add a student reporter, an admin, and at least one responder.</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Report an incident</div>
+                    <div class="step-copy">Capture the issue, choose a campus zone, and submit it for triage.</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Assign and close</div>
+                    <div class="step-copy">Route work to responders and keep leadership informed as status changes.</div>
+                </div>
+            </div>
+        </section>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def render_zone_overview() -> None:
+    cards = []
+    for index, zone in enumerate(ZONE_OPTIONS.values(), start=1):
+        cards.append(
+            (
+                '<div class="zone-card">'
+                f'<div class="zone-index">Z{index}</div>'
+                f'<div class="zone-title">{escape(zone)}</div>'
+                f'<div class="zone-copy">{escape(ZONE_DESCRIPTIONS.get(zone, "Campus area"))}</div>'
+                "</div>"
+            )
+        )
+    st.markdown(f'<div class="zone-grid">{"".join(cards)}</div>', unsafe_allow_html=True)
+
+
+def render_sidebar(snapshot: dict[str, pd.DataFrame]) -> str:
+    counts = snapshot_counts(snapshot)
+    st.sidebar.markdown(
+        f"""
+        <div class="sidebar-brand">
+            <div class="sidebar-brand-title">Campus Incident Command</div>
+            <div class="sidebar-brand-subtitle">Operational workspace for campus safety teams.</div>
+            <div class="sidebar-stat-grid">
+                <div class="sidebar-stat">
+                    <div class="sidebar-stat-value">{counts["total"]}</div>
+                    <div class="sidebar-stat-label">Incidents</div>
+                </div>
+                <div class="sidebar-stat">
+                    <div class="sidebar-stat-value">{counts["active"]}</div>
+                    <div class="sidebar-stat-label">Active</div>
+                </div>
+            </div>
+        </div>
+        <div class="sidebar-label">Navigation</div>
+        """,
+        unsafe_allow_html=True,
+    )
+    page = st.sidebar.radio(
+        "Go to",
+        ["Dashboard", "Report Incident", "Response Center", "People & Audit"],
+        label_visibility="collapsed",
+    )
+    st.sidebar.markdown('<div class="sidebar-label">Workspace</div>', unsafe_allow_html=True)
+    if st.sidebar.button("Refresh data", width="stretch"):
+        st.cache_data.clear()
+        st.rerun()
+    if st.sidebar.button("Load demo workspace", width="stretch"):
+        with st.spinner("Creating demo users and incidents..."):
+            try:
+                seed_demo_workspace()
+                st.success("Demo workspace loaded.")
+                st.rerun()
+            except Exception as exc:
+                st.error(f"Demo data could not be loaded: {exc}")
+    st.sidebar.caption("SQLite storage is created automatically on first run.")
+    return page
 
 
 def render_incident_card(row: pd.Series) -> None:
@@ -531,29 +1140,29 @@ def dashboard(snapshot: dict[str, pd.DataFrame]) -> None:
     users = snapshot["users"]
     analytics = snapshot["analytics"]
 
-    total = len(incidents)
-    open_count = int((incidents["status"] != "Closed").sum()) if not incidents.empty else 0
-    closed_count = int((incidents["status"] == "Closed").sum()) if not incidents.empty else 0
-    responder_count = int((users["role"] == "Responder").sum()) if not users.empty else 0
-    resolution_rate = f"{round((closed_count / total) * 100)}%" if total else "0%"
+    counts = snapshot_counts(snapshot)
 
+    render_section_heading("Overview", "Command Dashboard", "Monitor active work, response capacity, and campus risk at a glance.")
     cols = st.columns(4)
     with cols[0]:
-        render_metric("Total Incidents", total, "All reports in the system")
+        render_metric("Total Incidents", counts["total"], "All reports in the system", "IR")
     with cols[1]:
-        render_metric("Active Work", open_count, "Reported or in progress")
+        render_metric("Active Work", counts["active"], "Reported or in progress", "AW")
     with cols[2]:
-        render_metric("Resolution Rate", resolution_rate, f"{closed_count} closed incident{'s' if closed_count != 1 else ''}")
+        closed_count = int(counts["closed"])
+        render_metric("Resolution Rate", counts["resolution"], f"{closed_count} closed incident{'s' if closed_count != 1 else ''}", "RR")
     with cols[3]:
-        render_metric("Responders", responder_count, "Available response users")
+        render_metric("Responders", counts["responders"], "Available response users", "RS")
 
     if incidents.empty:
-        render_empty_state("No incidents yet.", "Create a user and report the first campus issue to populate the dashboard.")
+        render_welcome_empty_dashboard()
+        render_section_heading("Coverage", "Campus Zones", "The app groups reports into these operational zones for faster triage.")
+        render_zone_overview()
         return
 
     chart_col, zone_col = st.columns((1.1, 0.9), gap="large")
     with chart_col:
-        st.subheader("Incident Flow")
+        render_section_heading("Status", "Incident Flow")
         status_counts = (
             incidents.groupby("status", as_index=False)
             .size()
@@ -570,19 +1179,20 @@ def dashboard(snapshot: dict[str, pd.DataFrame]) -> None:
         )
         fig.update_layout(
             height=360,
-            margin=dict(l=10, r=10, t=20, b=10),
+            margin=dict(l=10, r=10, t=10, b=10),
             xaxis_title="",
             yaxis_title="Incidents",
             showlegend=False,
             plot_bgcolor="rgba(0,0,0,0)",
             paper_bgcolor="rgba(0,0,0,0)",
             font=dict(color="#18212f"),
+            bargap=0.36,
         )
-        fig.update_traces(textposition="outside", marker_line_width=0)
+        fig.update_traces(textposition="outside", marker_line_width=0, marker_cornerradius=7)
         st.plotly_chart(fig, width="stretch")
 
     with zone_col:
-        st.subheader("Zone Concentration")
+        render_section_heading("Zones", "Zone Concentration")
         zone_counts = incidents.groupby("zone", as_index=False).size().rename(columns={"size": "count"})
         fig = px.pie(
             zone_counts,
@@ -600,7 +1210,7 @@ def dashboard(snapshot: dict[str, pd.DataFrame]) -> None:
         )
         st.plotly_chart(fig, width="stretch")
 
-    st.subheader("Operational Snapshot")
+    render_section_heading("Operations", "Operational Snapshot", "Compare zone workload and recent response activity.")
     left, right = st.columns((0.95, 1.05), gap="large")
     with left:
         if analytics.empty:
@@ -609,6 +1219,7 @@ def dashboard(snapshot: dict[str, pd.DataFrame]) -> None:
         else:
             zone_summary = analytics[["zone", "incident_count", "resolved_count"]].copy()
         zone_summary["open_count"] = zone_summary["incident_count"] - zone_summary["resolved_count"]
+        st.markdown('<div class="table-caption">Zone workload</div>', unsafe_allow_html=True)
         st.dataframe(
             zone_summary.rename(
                 columns={
@@ -623,6 +1234,7 @@ def dashboard(snapshot: dict[str, pd.DataFrame]) -> None:
         )
     with right:
         recent_cols = ["id", "title", "status", "zone", "reporter", "assignee", "created"]
+        st.markdown('<div class="table-caption">Latest reports</div>', unsafe_allow_html=True)
         st.dataframe(
             incidents[recent_cols].head(8).rename(
                 columns={
@@ -644,12 +1256,16 @@ def report_incident(snapshot: dict[str, pd.DataFrame]) -> None:
     users = snapshot["users"]
     eligible = users[users["role"].isin(["Student", "Admin"])] if not users.empty else pd.DataFrame()
 
-    st.subheader("Report a New Incident")
-    st.caption("Students and admins can submit incidents. The backend validates the selected role before saving.")
+    render_section_heading(
+        "Intake",
+        "Report a New Incident",
+        "Capture the situation clearly so the response team can triage it quickly.",
+    )
 
     create_tab, quick_user_tab = st.tabs(["Incident Report", "Create Reporter"])
 
     with quick_user_tab:
+        render_empty_state("Need a reporter?", "Create a Student or Admin profile, then return to the incident report tab.")
         with st.form("create_reporter", clear_on_submit=True):
             name = st.text_input("Reporter name", placeholder="Example: Dana Kim")
             role = st.selectbox("Role", ["Student", "Admin"])
@@ -669,7 +1285,7 @@ def report_incident(snapshot: dict[str, pd.DataFrame]) -> None:
 
     with create_tab:
         if eligible.empty:
-            st.warning("Create a Student or Admin user before reporting an incident.")
+            render_empty_state("No eligible reporters yet.", "Create a Student or Admin user before reporting an incident.")
             return
 
         reporter_options = {
@@ -677,6 +1293,17 @@ def report_incident(snapshot: dict[str, pd.DataFrame]) -> None:
             for _, row in eligible.sort_values(["role", "name"]).iterrows()
         }
 
+        st.markdown(
+            """
+            <div class="panel">
+                <div class="section-eyebrow">Report quality</div>
+                <div class="section-copy">
+                    Use a concise title, include the immediate risk, and choose the closest campus zone.
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
         with st.form("incident_report_form", clear_on_submit=True):
             title = st.text_input("Incident title", placeholder="Example: Water leak near the library entrance")
             description = st.text_area(
@@ -720,11 +1347,15 @@ def response_center(snapshot: dict[str, pd.DataFrame]) -> None:
     incidents = snapshot["incidents"]
     users = snapshot["users"]
 
-    st.subheader("Response Center")
-    st.caption("Admins assign work to responders. Admins and responders can update incident status.")
+    render_section_heading(
+        "Triage",
+        "Response Center",
+        "Assign active work, filter the queue, and keep incident status current.",
+    )
 
     if incidents.empty:
         render_empty_state("No incidents available.", "Report an incident before assigning or updating response work.")
+        render_zone_overview()
         return
 
     admins = users[users["role"] == "Admin"] if not users.empty else pd.DataFrame()
@@ -752,19 +1383,20 @@ def response_center(snapshot: dict[str, pd.DataFrame]) -> None:
     left, right = st.columns((1.05, 0.95), gap="large")
 
     with left:
-        st.markdown("#### Queue")
+        render_section_heading("Queue", "Active Incident Queue")
         if filtered.empty:
-            st.info("No incidents match the current filters.")
+            render_empty_state("No matches.", "Adjust the filters or create a new incident.")
         else:
             for _, row in filtered.head(10).iterrows():
                 render_incident_card(row)
 
     with right:
+        render_section_heading("Actions", "Responder Workflow")
         assign_tab, status_tab = st.tabs(["Assign", "Update Status"])
 
         with assign_tab:
             if admins.empty or responders.empty:
-                st.warning("Create at least one Admin and one Responder before assigning incidents.")
+                render_empty_state("Team setup needed.", "Create at least one Admin and one Responder before assigning incidents.")
             else:
                 with st.form("assign_form"):
                     assignable = incidents[incidents["status"] != "Closed"].copy()
@@ -779,7 +1411,7 @@ def response_center(snapshot: dict[str, pd.DataFrame]) -> None:
                         f"{row['name']} - ID {int(row['id'])}": int(row["id"]) for _, row in responders.iterrows()
                     }
                     if not incident_options:
-                        st.info("All incidents are closed.")
+                        render_empty_state("Nothing to assign.", "All incidents are currently closed.")
                     else:
                         selected_incident = st.selectbox("Incident", list(incident_options.keys()))
                         selected_responder = st.selectbox("Responder", list(responder_options.keys()))
@@ -800,7 +1432,7 @@ def response_center(snapshot: dict[str, pd.DataFrame]) -> None:
 
         with status_tab:
             if managers.empty:
-                st.warning("Create an Admin or Responder before updating status.")
+                render_empty_state("No status editors yet.", "Create an Admin or Responder before updating status.")
             else:
                 with st.form("status_form"):
                     incident_options = {
@@ -834,12 +1466,26 @@ def people_and_audit(snapshot: dict[str, pd.DataFrame]) -> None:
     users = snapshot["users"]
     audit = snapshot["audit"]
 
+    render_section_heading(
+        "Administration",
+        "People & Audit",
+        "Manage campus roles and review the system history created by operational actions.",
+    )
     user_tab, audit_tab = st.tabs(["People", "Audit Trail"])
 
     with user_tab:
-        st.subheader("People")
+        render_section_heading("Directory", "People")
         cols = st.columns((0.9, 1.1), gap="large")
         with cols[0]:
+            st.markdown(
+                """
+                <div class="panel">
+                    <div class="section-eyebrow">New profile</div>
+                    <div class="section-copy">Roles control what users can do in the response workflow.</div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
             with st.form("create_any_user", clear_on_submit=True):
                 name = st.text_input("Name", placeholder="Example: Alex Morgan")
                 role = st.selectbox("Role", ["Student", "Responder", "Admin"])
@@ -858,17 +1504,18 @@ def people_and_audit(snapshot: dict[str, pd.DataFrame]) -> None:
                             st.error(str(payload))
         with cols[1]:
             if users.empty:
-                st.info("No users have been created yet.")
+                render_empty_state("No people yet.", "Create the first campus profile to begin reporting and assigning incidents.")
             else:
                 display = users.sort_values(["role", "name"])[["id", "name", "role"]].rename(
                     columns={"id": "ID", "name": "Name", "role": "Role"}
                 )
+                st.markdown('<div class="table-caption">Campus directory</div>', unsafe_allow_html=True)
                 st.dataframe(display, hide_index=True, width="stretch")
 
     with audit_tab:
-        st.subheader("Audit Trail")
+        render_section_heading("History", "Audit Trail")
         if audit.empty:
-            st.info("No audit events have been recorded yet.")
+            render_empty_state("No audit events yet.", "Create or update an incident to start the audit trail.")
         else:
             display = audit[["time", "actor", "action", "incident_id"]].rename(
                 columns={
@@ -878,36 +1525,15 @@ def people_and_audit(snapshot: dict[str, pd.DataFrame]) -> None:
                     "incident_id": "Incident ID",
                 }
             )
+            st.markdown('<div class="table-caption">Recent system events</div>', unsafe_allow_html=True)
             st.dataframe(display, hide_index=True, width="stretch")
 
 
 def main() -> None:
     inject_styles()
-    render_header()
-
-    with st.sidebar:
-        st.markdown("### Navigation")
-        page = st.radio(
-            "Go to",
-            ["Dashboard", "Report Incident", "Response Center", "People & Audit"],
-            label_visibility="collapsed",
-        )
-        st.divider()
-        st.markdown("### Workspace")
-        if st.button("Refresh data", width="stretch"):
-            st.cache_data.clear()
-            st.rerun()
-        if st.button("Load demo workspace", width="stretch"):
-            with st.spinner("Creating demo users and incidents..."):
-                try:
-                    seed_demo_workspace()
-                    st.success("Demo workspace loaded.")
-                    st.rerun()
-                except Exception as exc:
-                    st.error(f"Demo data could not be loaded: {exc}")
-        st.caption("SQLite storage is created automatically by the backend on first run.")
-
     snapshot = load_snapshot()
+    page = render_sidebar(snapshot)
+    render_header(snapshot)
 
     if page == "Dashboard":
         dashboard(snapshot)

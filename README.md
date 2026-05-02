@@ -1,6 +1,6 @@
 # Campus Incident Command
 
-A polished Streamlit frontend for the University Incident Management backend. The app lets campus teams create users, report incidents, assign responders, update incident status, inspect audit history, and review zone-level analytics powered by H3 spatial indexing.
+A polished Streamlit command-center frontend for the University Incident Management backend. The app lets campus teams create users, report incidents, assign responders, update incident status, inspect audit history, and review zone-level analytics powered by H3 spatial indexing.
 
 ## What It Does
 
@@ -8,6 +8,7 @@ A polished Streamlit frontend for the University Incident Management backend. Th
 - Reports campus incidents by zone with backend role validation.
 - Assigns incidents to responders and moves work through Reported, In Progress, and Closed states.
 - Shows dashboard metrics, status charts, zone concentration, incident queues, and audit logs.
+- Includes a presentation-ready dashboard design with responsive spacing, polished cards, clear empty states, styled forms, and readable tables.
 - Uses SQLite for local storage and automatically creates the database tables on first run.
 
 ## Tech Stack
@@ -63,10 +64,12 @@ Core endpoints include:
 
 ## Deploy to Streamlit Community Cloud
 
+This project is deployed on Streamlit Community Cloud because it is a free, stable fit for a Streamlit app, installs directly from GitHub, does not require a credit card for public community apps, and keeps the deployment simple.
+
 1. Push this project to a GitHub repository.
 2. Open [Streamlit Community Cloud](https://share.streamlit.io/).
 3. Choose `New app`.
-4. Select the repository and branch.
+4. Select the repository and the `main` branch.
 5. Set the main file path to `app.py`.
 6. Deploy the app.
 
