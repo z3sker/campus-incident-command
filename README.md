@@ -78,3 +78,5 @@ Streamlit Cloud installs dependencies from `requirements.txt` and creates the lo
 ## Public App
 
 Streamlit app URL: [https://khgkkhidyup7tqskw7gtmq.streamlit.app/](https://khgkkhidyup7tqskw7gtmq.streamlit.app/)
+
+Direct runtime URL: [https://khgkkhidyup7tqskw7gtmq.streamlit.app/~/+/](https://khgkkhidyup7tqskw7gtmq.streamlit.app/~/+/)
