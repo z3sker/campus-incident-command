@@ -755,6 +755,189 @@ def inject_styles(theme_mode: str = "Light") -> None:
             margin: -0.25rem 0 0.6rem;
         }
 
+        .snapshot-label {
+            color: var(--ink-2);
+            font-size: 0.88rem;
+            font-weight: 900;
+            margin: -0.18rem 0 0.7rem;
+        }
+
+        .workload-stack {
+            display: grid;
+            gap: 0.72rem;
+        }
+
+        .workload-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 0.9rem;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .workload-card-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 0.85rem;
+            margin-bottom: 0.74rem;
+        }
+
+        .workload-zone {
+            color: var(--ink);
+            font-size: 0.98rem;
+            font-weight: 950;
+            line-height: 1.25;
+        }
+
+        .workload-note {
+            color: var(--muted);
+            font-size: 0.8rem;
+            line-height: 1.35;
+            margin-top: 0.18rem;
+        }
+
+        .workload-total {
+            min-width: 2.3rem;
+            height: 2.3rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: #e8f4f6;
+            border: 1px solid #c6dde4;
+            color: var(--accent);
+            font-weight: 950;
+        }
+
+        .workload-progress {
+            height: 0.55rem;
+            border-radius: 999px;
+            overflow: hidden;
+            background: #e8eef3;
+            border: 1px solid rgba(196, 214, 222, 0.82);
+            margin-bottom: 0.68rem;
+        }
+
+        .workload-progress-fill {
+            display: block;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+        }
+
+        .workload-kpis {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.48rem;
+        }
+
+        .workload-kpi {
+            border: 1px solid #d8e5eb;
+            border-radius: 8px;
+            background: #f7fbfc;
+            padding: 0.5rem;
+        }
+
+        .workload-kpi-label {
+            color: var(--muted);
+            font-size: 0.68rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            line-height: 1.3;
+        }
+
+        .workload-kpi-value {
+            color: var(--ink);
+            font-size: 1.05rem;
+            font-weight: 950;
+            line-height: 1.15;
+            margin-top: 0.12rem;
+        }
+
+        .report-list {
+            display: grid;
+            gap: 0.72rem;
+        }
+
+        .report-card {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            gap: 0.82rem;
+            align-items: start;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid var(--line);
+            border-left: 5px solid var(--accent);
+            border-radius: 8px;
+            padding: 0.9rem;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .report-card.status-reported {
+            border-left-color: var(--danger);
+        }
+
+        .report-card.status-progress {
+            border-left-color: var(--amber);
+        }
+
+        .report-card.status-closed {
+            border-left-color: var(--green);
+        }
+
+        .report-id {
+            min-width: 2.35rem;
+            height: 2.35rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: #f1f6f8;
+            border: 1px solid #d5e2e8;
+            color: var(--ink);
+            font-size: 0.78rem;
+            font-weight: 950;
+        }
+
+        .report-title {
+            color: var(--ink);
+            font-size: 0.98rem;
+            font-weight: 950;
+            line-height: 1.28;
+            margin-bottom: 0.42rem;
+        }
+
+        .report-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.38rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .report-meta-item {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            border: 1px solid #d3e2e8;
+            background: #f4fafb;
+            color: var(--ink-2);
+            font-size: 0.74rem;
+            font-weight: 850;
+            line-height: 1.25;
+            padding: 0.22rem 0.55rem;
+        }
+
+        .report-desc {
+            color: var(--muted);
+            font-size: 0.86rem;
+            line-height: 1.45;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
         div[data-testid="stMetric"] {
             background: rgba(255, 255, 255, 0.92);
             border: 1px solid var(--line);
@@ -865,7 +1048,12 @@ def inject_styles(theme_mode: str = "Light") -> None:
 
             .step-row,
             .zone-grid,
-            .scenario-grid {
+            .scenario-grid,
+            .workload-kpis {
+                grid-template-columns: 1fr;
+            }
+
+            .report-card {
                 grid-template-columns: 1fr;
             }
 
@@ -931,7 +1119,9 @@ def inject_styles(theme_mode: str = "Light") -> None:
             .empty-state,
             .zone-card,
             .incident-card,
-            .scenario-card {
+            .scenario-card,
+            .workload-card,
+            .report-card {
                 background: rgba(20, 34, 45, 0.92) !important;
                 border-color: var(--line) !important;
             }
@@ -956,10 +1146,23 @@ def inject_styles(theme_mode: str = "Light") -> None:
             .hero-pill,
             .scenario-role,
             .metric-icon,
-            .zone-index {
+            .zone-index,
+            .workload-total,
+            .report-id,
+            .report-meta-item {
                 background: rgba(92, 200, 215, 0.12);
                 border-color: rgba(92, 200, 215, 0.35);
                 color: var(--accent);
+            }
+
+            .workload-progress {
+                background: rgba(226, 238, 242, 0.10);
+                border-color: var(--line);
+            }
+
+            .workload-kpi {
+                background: rgba(13, 24, 33, 0.58);
+                border-color: var(--line);
             }
 
             .welcome-band {
@@ -1026,6 +1229,14 @@ def status_chip(status: str) -> str:
         "Closed": "chip-closed",
     }.get(status, "chip-neutral")
     return f'<span class="chip {css_class}">{escape(status)}</span>'
+
+
+def status_css_class(status: str) -> str:
+    return {
+        "Reported": "status-reported",
+        "In Progress": "status-progress",
+        "Closed": "status-closed",
+    }.get(status, "status-neutral")
 
 
 def api_error(response: Any, fallback: str) -> str:
@@ -1500,6 +1711,88 @@ def render_incident_card(row: pd.Series) -> None:
     )
 
 
+def render_zone_workload_cards(zone_summary: pd.DataFrame) -> None:
+    if zone_summary.empty:
+        render_empty_state("No zone workload yet.", "Report incidents to see workload by campus zone.")
+        return
+
+    display = zone_summary.copy()
+    display["incident_count"] = display["incident_count"].fillna(0).astype(int)
+    display["resolved_count"] = display["resolved_count"].fillna(0).astype(int)
+    display["open_count"] = (display["incident_count"] - display["resolved_count"]).clip(lower=0).astype(int)
+    display = display.sort_values(["open_count", "incident_count", "zone"], ascending=[False, False, True])
+    max_count = max(int(display["incident_count"].max()), 1)
+
+    cards = []
+    for _, row in display.iterrows():
+        reported = int(row["incident_count"])
+        closed = int(row["resolved_count"])
+        open_count = int(row["open_count"])
+        percentage = max(4, round((reported / max_count) * 100)) if reported else 0
+        cards.append(
+            (
+                '<div class="workload-card">'
+                '<div class="workload-card-top">'
+                '<div>'
+                f'<div class="workload-zone">{escape(str(row["zone"]))}</div>'
+                f'<div class="workload-note">{open_count} open now across this campus area</div>'
+                "</div>"
+                f'<div class="workload-total">{reported}</div>'
+                "</div>"
+                f'<div class="workload-progress" aria-label="{reported} total incidents">'
+                f'<span class="workload-progress-fill" style="width: {percentage}%"></span>'
+                "</div>"
+                '<div class="workload-kpis">'
+                '<div class="workload-kpi">'
+                '<div class="workload-kpi-label">Reported</div>'
+                f'<div class="workload-kpi-value">{reported}</div>'
+                "</div>"
+                '<div class="workload-kpi">'
+                '<div class="workload-kpi-label">Open</div>'
+                f'<div class="workload-kpi-value">{open_count}</div>'
+                "</div>"
+                '<div class="workload-kpi">'
+                '<div class="workload-kpi-label">Closed</div>'
+                f'<div class="workload-kpi-value">{closed}</div>'
+                "</div>"
+                "</div>"
+                "</div>"
+            )
+        )
+    st.markdown(f'<div class="workload-stack">{"".join(cards)}</div>', unsafe_allow_html=True)
+
+
+def render_latest_report_cards(incidents: pd.DataFrame) -> None:
+    if incidents.empty:
+        render_empty_state("No latest reports.", "Newly reported incidents will appear here.")
+        return
+
+    cards = []
+    for _, row in incidents.head(6).iterrows():
+        status = str(row.get("status", "Unknown"))
+        assignee = str(row.get("assignee", "Unassigned"))
+        assignee_label = "Unassigned" if assignee == "Unassigned" else f"Assigned: {assignee}"
+        cards.append(
+            (
+                f'<div class="report-card {status_css_class(status)}">'
+                f'<div class="report-id">#{int(row["id"])}</div>'
+                '<div class="report-body">'
+                f'<div class="report-title">{escape(str(row.get("title", "Untitled incident")))}</div>'
+                '<div class="report-meta">'
+                f"{status_chip(status)}"
+                f'<span class="report-meta-item">{escape(str(row.get("zone", "Unknown Zone")))}</span>'
+                f'<span class="report-meta-item">Reporter: {escape(str(row.get("reporter", "Unknown")))}</span>'
+                f'<span class="report-meta-item">{escape(assignee_label)}</span>'
+                f'<span class="report-meta-item">{escape(str(row.get("created", "Unknown")))}</span>'
+                "</div>"
+                f'<div class="report-desc">{escape(str(row.get("description", "")))}</div>'
+                "</div>"
+                "</div>"
+            )
+        )
+    st.markdown(f'<div class="report-list">{"".join(cards)}</div>', unsafe_allow_html=True)
+
+
 def dashboard(snapshot: dict[str, pd.DataFrame]) -> None:
     incidents = snapshot["incidents"]
     users = snapshot["users"]
@@ -1589,37 +1882,11 @@ def dashboard(snapshot: dict[str, pd.DataFrame]) -> None:
         else:
             zone_summary = analytics[["zone", "incident_count", "resolved_count"]].copy()
         zone_summary["open_count"] = zone_summary["incident_count"] - zone_summary["resolved_count"]
-        st.markdown('<div class="table-caption">Zone workload</div>', unsafe_allow_html=True)
-        st.dataframe(
-            zone_summary.rename(
-                columns={
-                    "zone": "Zone",
-                    "incident_count": "Reported",
-                    "resolved_count": "Closed",
-                    "open_count": "Open",
-                }
-            ),
-            hide_index=True,
-            width="stretch",
-        )
+        st.markdown('<div class="snapshot-label">Zone workload</div>', unsafe_allow_html=True)
+        render_zone_workload_cards(zone_summary)
     with right:
-        recent_cols = ["id", "title", "status", "zone", "reporter", "assignee", "created"]
-        st.markdown('<div class="table-caption">Latest reports</div>', unsafe_allow_html=True)
-        st.dataframe(
-            incidents[recent_cols].head(8).rename(
-                columns={
-                    "id": "ID",
-                    "title": "Incident",
-                    "status": "Status",
-                    "zone": "Zone",
-                    "reporter": "Reporter",
-                    "assignee": "Assigned To",
-                    "created": "Created",
-                }
-            ),
-            hide_index=True,
-            width="stretch",
-        )
+        st.markdown('<div class="snapshot-label">Latest reports</div>', unsafe_allow_html=True)
+        render_latest_report_cards(incidents)
 
     render_section_heading("Examples", "Sample Incidents", "Prepared use cases for explaining the workflow clearly.")
     render_example_scenarios()
