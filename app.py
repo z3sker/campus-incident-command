@@ -54,29 +54,34 @@ ZONE_DESCRIPTIONS = {
 EXAMPLE_SCENARIOS = [
     {
         "title": "Water leak in academic corridor",
+        "description": "Water is spreading across the first-floor academic corridor near the lockers. The area needs quick inspection and cleanup.",
+        "zone_key": "main_building",
         "zone": "Main Building",
         "role": "Student report",
         "detail": "A student reports water spreading near lockers. Admin assigns a responder, then tracks the case until the area is safe.",
+        "assign": True,
+        "status_id": 2,
     },
     {
         "title": "Dormitory exterior light outage",
+        "description": "The main walkway light outside the dormitory entrance is not working after sunset, creating a visibility issue.",
+        "zone_key": "dormitory",
         "zone": "Dormitory",
         "role": "Night safety",
         "detail": "A walkway light fails after sunset. The incident is routed to a responder and kept open until maintenance resolves it.",
+        "assign": True,
+        "status_id": 3,
     },
     {
         "title": "Smoke alarm in cafeteria",
+        "description": "A smoke alarm activated in the cafeteria kitchen service area during lunch preparation and needs triage.",
+        "zone_key": "cafeteria",
         "zone": "Cafeteria",
         "role": "Priority response",
         "detail": "A cafeteria alarm triggers during lunch service. The workflow shows assignment, status change, and audit tracking.",
+        "assign": False,
+        "status_id": 1,
     },
-]
-
-PRESENTATION_STEPS = [
-    ("Create the team", "Add Student, Responder, and Admin users to show role-based access."),
-    ("Report an incident", "Submit a realistic issue with title, description, reporter, and campus zone."),
-    ("Assign response", "Use the Response Center to route active work from an Admin to a Responder."),
-    ("Close the loop", "Update status and review audit history to prove the backend recorded the action."),
 ]
 
 
@@ -626,31 +631,6 @@ def inject_styles(theme_mode: str = "Light") -> None:
             line-height: 1.52;
         }
 
-        .presentation-hero {
-            border: 1px solid rgba(196, 214, 222, 0.88);
-            border-radius: 8px;
-            background:
-                linear-gradient(120deg, rgba(255, 255, 255, 0.98), rgba(239, 247, 250, 0.96)),
-                linear-gradient(90deg, rgba(22, 121, 140, 0.12), rgba(47, 157, 104, 0.08));
-            box-shadow: var(--shadow);
-            padding: clamp(1.05rem, 2vw, 1.45rem);
-            margin: 0.6rem 0 1rem;
-        }
-
-        .presentation-title {
-            color: var(--ink);
-            font-size: clamp(1.35rem, 2.5vw, 2.05rem);
-            font-weight: 950;
-            line-height: 1.15;
-            margin-bottom: 0.4rem;
-        }
-
-        .presentation-copy {
-            color: var(--muted);
-            max-width: 850px;
-            line-height: 1.58;
-        }
-
         .scenario-grid {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -700,58 +680,6 @@ def inject_styles(theme_mode: str = "Light") -> None:
             color: var(--muted);
             font-size: 0.9rem;
             line-height: 1.52;
-        }
-
-        .story-grid {
-            display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 0.75rem;
-            margin-top: 0.85rem;
-        }
-
-        .story-step {
-            background: rgba(255, 255, 255, 0.94);
-            border: 1px solid var(--line);
-            border-radius: 8px;
-            box-shadow: var(--shadow-soft);
-            padding: 0.95rem;
-        }
-
-        .story-number {
-            width: 1.8rem;
-            height: 1.8rem;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-            color: #ffffff;
-            background: linear-gradient(180deg, var(--accent), #0f6474);
-            font-weight: 950;
-            font-size: 0.78rem;
-            margin-bottom: 0.62rem;
-        }
-
-        .story-title {
-            color: var(--ink);
-            font-weight: 950;
-            line-height: 1.25;
-            margin-bottom: 0.25rem;
-        }
-
-        .story-copy {
-            color: var(--muted);
-            font-size: 0.88rem;
-            line-height: 1.48;
-        }
-
-        .premium-note {
-            background: linear-gradient(120deg, rgba(22, 121, 140, 0.10), rgba(47, 157, 104, 0.08));
-            border: 1px solid #bcd7df;
-            border-radius: 8px;
-            padding: 0.9rem 1rem;
-            color: var(--ink-2);
-            font-weight: 750;
-            line-height: 1.55;
         }
 
         .incident-card {
@@ -937,8 +865,7 @@ def inject_styles(theme_mode: str = "Light") -> None:
 
             .step-row,
             .zone-grid,
-            .scenario-grid,
-            .story-grid {
+            .scenario-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -949,8 +876,7 @@ def inject_styles(theme_mode: str = "Light") -> None:
 
         @media (min-width: 801px) and (max-width: 1120px) {
             .zone-grid,
-            .scenario-grid,
-            .story-grid {
+            .scenario-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
         }
@@ -1005,8 +931,7 @@ def inject_styles(theme_mode: str = "Light") -> None:
             .empty-state,
             .zone-card,
             .incident-card,
-            .scenario-card,
-            .story-step {
+            .scenario-card {
                 background: rgba(20, 34, 45, 0.92) !important;
                 border-color: var(--line) !important;
             }
@@ -1016,8 +941,7 @@ def inject_styles(theme_mode: str = "Light") -> None:
                 border-color: rgba(92, 200, 215, 0.42) !important;
             }
 
-            .hero-shell,
-            .presentation-hero {
+            .hero-shell {
                 background:
                     linear-gradient(110deg, rgba(20, 34, 45, 0.98), rgba(18, 45, 54, 0.92) 62%, rgba(12, 25, 34, 0.94)),
                     linear-gradient(90deg, rgba(92, 200, 215, 0.12), rgba(116, 215, 189, 0.08));
@@ -1043,12 +967,6 @@ def inject_styles(theme_mode: str = "Light") -> None:
                     linear-gradient(120deg, rgba(9, 17, 24, 0.98), rgba(15, 52, 62, 0.94)),
                     linear-gradient(90deg, rgba(92, 200, 215, 0.18), rgba(116, 215, 189, 0.12));
                 border-color: var(--line);
-            }
-
-            .premium-note {
-                background: rgba(92, 200, 215, 0.10);
-                border-color: rgba(92, 200, 215, 0.32);
-                color: var(--ink-2);
             }
 
             .stTextInput input,
@@ -1169,6 +1087,46 @@ def put_update_status(incident_id: int, status_id: int, user_id: int) -> tuple[b
     return False, api_error(response, "The incident status could not be updated.")
 
 
+def find_user_id(name: str, role_name: str) -> int | None:
+    db = SessionLocal()
+    try:
+        role = db.query(Role).filter(Role.name == role_name).first()
+        if not role:
+            return None
+        user = (
+            db.query(User)
+            .filter(User.name == name, User.role_id == role.id)
+            .order_by(User.id.asc())
+            .first()
+        )
+        return int(user.id) if user else None
+    finally:
+        db.close()
+
+
+def read_incident_state(title: str) -> dict[str, int | None] | None:
+    db = SessionLocal()
+    try:
+        incident = db.query(Incident).filter(Incident.title == title).order_by(Incident.id.asc()).first()
+        if not incident:
+            return None
+        return {
+            "id": int(incident.id),
+            "status_id": int(incident.status_id or 1),
+            "assigned_to": int(incident.assigned_to) if incident.assigned_to else None,
+        }
+    finally:
+        db.close()
+
+
+def incident_count() -> int:
+    db = SessionLocal()
+    try:
+        return int(db.query(Incident).count())
+    finally:
+        db.close()
+
+
 @st.cache_data(ttl=4)
 def load_snapshot() -> dict[str, pd.DataFrame]:
     db = SessionLocal()
@@ -1246,14 +1204,10 @@ def load_snapshot() -> dict[str, pd.DataFrame]:
 
 
 def seed_demo_workspace() -> None:
-    snapshot = load_snapshot()
-    users = snapshot["users"]
-
     def find_or_create(name: str, role: str) -> int:
-        if not users.empty:
-            matches = users[(users["name"] == name) & (users["role"] == role)]
-            if not matches.empty:
-                return int(matches.iloc[0]["id"])
+        existing_id = find_user_id(name, role)
+        if existing_id:
+            return existing_id
         ok, payload = post_create_user(name, role)
         if not ok:
             raise RuntimeError(str(payload))
@@ -1263,22 +1217,50 @@ def seed_demo_workspace() -> None:
     responder_id = find_or_create("Safety Responder", "Responder")
     student_id = find_or_create("Student Reporter", "Student")
 
-    demo_incidents = [
-        ("Water leak near lockers", "Water is spreading across the first-floor corridor near the lockers.", "main_building"),
-        ("Broken exterior light", "The walkway light outside the dormitory entrance is not working after sunset.", "dormitory"),
-        ("Cafeteria smoke alarm", "Smoke alarm activated in the kitchen service area during lunch preparation.", "cafeteria"),
-    ]
+    for scenario in EXAMPLE_SCENARIOS:
+        state = read_incident_state(scenario["title"])
+        if not state:
+            ok, payload = post_create_incident(
+                scenario["title"],
+                scenario["description"],
+                student_id,
+                scenario["zone_key"],
+            )
+            if not ok or not isinstance(payload, dict):
+                raise RuntimeError(str(payload))
+            state = {
+                "id": int(payload["id"]),
+                "status_id": int(payload.get("status_id", 1)),
+                "assigned_to": payload.get("assigned_to"),
+            }
 
-    created_ids: list[int] = []
-    for title, description, zone in demo_incidents:
-        ok, payload = post_create_incident(title, description, student_id, zone)
-        if ok and isinstance(payload, dict):
-            created_ids.append(int(payload["id"]))
+        incident_id = int(state["id"])
+        if scenario["assign"] and not state["assigned_to"]:
+            ok, message = put_assign_incident(incident_id, responder_id, admin_id)
+            if not ok:
+                raise RuntimeError(message)
+            state = read_incident_state(scenario["title"]) or state
 
-    if created_ids:
-        put_assign_incident(created_ids[-1], responder_id, admin_id)
+        target_status = int(scenario["status_id"])
+        if target_status == 3 and int(state["status_id"] or 1) != 3:
+            ok, message = put_update_status(incident_id, target_status, responder_id)
+            if not ok:
+                raise RuntimeError(message)
 
     st.cache_data.clear()
+
+
+def ensure_starter_workspace() -> str | None:
+    if st.session_state.get("starter_workspace_checked"):
+        return None
+    st.session_state.starter_workspace_checked = True
+    if incident_count() > 0:
+        return None
+    try:
+        seed_demo_workspace()
+    except Exception as exc:
+        return f"Starter sample data could not be created: {exc}"
+    return None
 
 
 def snapshot_counts(snapshot: dict[str, pd.DataFrame]) -> dict[str, int | str]:
@@ -1447,21 +1429,6 @@ def render_example_scenarios() -> None:
     st.markdown(f'<div class="scenario-grid">{"".join(cards)}</div>', unsafe_allow_html=True)
 
 
-def render_presentation_steps() -> None:
-    steps = []
-    for index, (title, copy) in enumerate(PRESENTATION_STEPS, start=1):
-        steps.append(
-            (
-                '<div class="story-step">'
-                f'<div class="story-number">{index}</div>'
-                f'<div class="story-title">{escape(title)}</div>'
-                f'<div class="story-copy">{escape(copy)}</div>'
-                "</div>"
-            )
-        )
-    st.markdown(f'<div class="story-grid">{"".join(steps)}</div>', unsafe_allow_html=True)
-
-
 def render_sidebar(snapshot: dict[str, pd.DataFrame]) -> tuple[str, str]:
     if "dark_mode" not in st.session_state:
         st.session_state.dark_mode = False
@@ -1488,7 +1455,7 @@ def render_sidebar(snapshot: dict[str, pd.DataFrame]) -> tuple[str, str]:
     )
     page = st.sidebar.radio(
         "Go to",
-        ["Dashboard", "Report Incident", "Response Center", "People & Audit", "Presentation Guide"],
+        ["Dashboard", "Report Incident", "Response Center", "People & Audit"],
         label_visibility="collapsed",
     )
     st.sidebar.markdown('<div class="sidebar-label">Appearance</div>', unsafe_allow_html=True)
@@ -1499,15 +1466,15 @@ def render_sidebar(snapshot: dict[str, pd.DataFrame]) -> tuple[str, str]:
     if st.sidebar.button("Refresh data", width="stretch"):
         st.cache_data.clear()
         st.rerun()
-    if st.sidebar.button("Load demo workspace", width="stretch"):
-        with st.spinner("Creating demo users and incidents..."):
+    if st.sidebar.button("Restore sample data", width="stretch"):
+        with st.spinner("Creating sample users and incidents..."):
             try:
                 seed_demo_workspace()
-                st.success("Demo workspace loaded.")
+                st.success("Sample workspace is ready.")
                 st.rerun()
             except Exception as exc:
-                st.error(f"Demo data could not be loaded: {exc}")
-    st.sidebar.caption("SQLite storage is created automatically on first run.")
+                st.error(f"Sample data could not be loaded: {exc}")
+    st.sidebar.caption("Starter sample data is created automatically on first run.")
     return page, theme_mode
 
 
@@ -1555,7 +1522,7 @@ def dashboard(snapshot: dict[str, pd.DataFrame]) -> None:
 
     if incidents.empty:
         render_welcome_empty_dashboard()
-        render_section_heading("Demo examples", "Presentation Scenarios", "Use these examples to explain how the system works before loading demo data.")
+        render_section_heading("Examples", "Sample Incidents", "Starter examples show the intended workflow before new reports are added.")
         render_example_scenarios()
         render_section_heading("Coverage", "Campus Zones", "The app groups reports into these operational zones for faster triage.")
         render_zone_overview()
@@ -1654,7 +1621,7 @@ def dashboard(snapshot: dict[str, pd.DataFrame]) -> None:
             width="stretch",
         )
 
-    render_section_heading("Demo examples", "Presentation Scenarios", "Prepared use cases for walking stakeholders through the workflow.")
+    render_section_heading("Examples", "Sample Incidents", "Prepared use cases for explaining the workflow clearly.")
     render_example_scenarios()
 
 
@@ -1935,85 +1902,14 @@ def people_and_audit(snapshot: dict[str, pd.DataFrame]) -> None:
             st.dataframe(display, hide_index=True, width="stretch")
 
 
-def presentation_guide(snapshot: dict[str, pd.DataFrame]) -> None:
-    counts = snapshot_counts(snapshot)
-    render_section_heading(
-        "Presentation",
-        "Demo Guide",
-        "A ready-made storyline for explaining the app clearly during a project presentation.",
-    )
-    st.markdown(
-        f"""
-        <section class="presentation-hero">
-            <div class="presentation-title">Show the product as an operational command center, not a code demo.</div>
-            <div class="presentation-copy">
-                Start with the dashboard, load demo data if needed, then walk through reporting,
-                assignment, status updates, analytics, and the audit trail. Current workspace:
-                {counts["total"]} incidents, {counts["active"]} active, {counts["responders"]} responders.
-            </div>
-        </section>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    story_tab, scenario_tab, checklist_tab = st.tabs(["Storyline", "Example Incidents", "Presenter Checklist"])
-
-    with story_tab:
-        render_section_heading("Flow", "Four-step demo story", "This sequence demonstrates every major backend capability.")
-        render_presentation_steps()
-        st.markdown(
-            """
-            <div class="premium-note">
-                Suggested opener: "This dashboard helps a campus operations team move from
-                incident discovery to assigned response and auditable closure in one place."
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-    with scenario_tab:
-        render_section_heading("Examples", "Ready-to-present scenarios", "Use these sample incidents to make the workflow concrete.")
-        render_example_scenarios()
-        render_section_heading("Coverage", "Campus zone model", "Spatial grouping keeps the operational view simple and easy to explain.")
-        render_zone_overview()
-
-    with checklist_tab:
-        left, right = st.columns(2, gap="large")
-        with left:
-            st.markdown(
-                """
-                <div class="panel">
-                    <div class="section-eyebrow">Before presenting</div>
-                    <div class="section-copy">
-                        Use <strong>Load demo workspace</strong> if the deployed database is empty.
-                        Confirm the sidebar theme toggle works and open the Dashboard first.
-                    </div>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
-            render_empty_state("Best first click", "Open Dashboard, show the executive snapshot, then switch between light and dark mode.")
-        with right:
-            st.markdown(
-                """
-                <div class="panel">
-                    <div class="section-eyebrow">What to emphasize</div>
-                    <div class="section-copy">
-                        Role validation, H3 campus zones, incident assignment, status tracking,
-                        analytics, and audit history are all connected to the existing backend.
-                    </div>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
-            render_empty_state("Closing point", "Finish on People & Audit to show that operational actions are traceable.")
-
-
 def main() -> None:
+    starter_error = ensure_starter_workspace()
     snapshot = load_snapshot()
     page, theme_mode = render_sidebar(snapshot)
     inject_styles(theme_mode)
     render_header(snapshot)
+    if starter_error:
+        st.warning(starter_error)
 
     if page == "Dashboard":
         dashboard(snapshot)
@@ -2021,10 +1917,8 @@ def main() -> None:
         report_incident(snapshot)
     elif page == "Response Center":
         response_center(snapshot)
-    elif page == "People & Audit":
-        people_and_audit(snapshot)
     else:
-        presentation_guide(snapshot)
+        people_and_audit(snapshot)
 
 
 if __name__ == "__main__":
