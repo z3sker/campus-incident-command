@@ -51,8 +51,50 @@ ZONE_DESCRIPTIONS = {
     "Library": "Study spaces",
 }
 
+EXAMPLE_SCENARIOS = [
+    {
+        "title": "Water leak in academic corridor",
+        "zone": "Main Building",
+        "role": "Student report",
+        "detail": "A student reports water spreading near lockers. Admin assigns a responder, then tracks the case until the area is safe.",
+    },
+    {
+        "title": "Dormitory exterior light outage",
+        "zone": "Dormitory",
+        "role": "Night safety",
+        "detail": "A walkway light fails after sunset. The incident is routed to a responder and kept open until maintenance resolves it.",
+    },
+    {
+        "title": "Smoke alarm in cafeteria",
+        "zone": "Cafeteria",
+        "role": "Priority response",
+        "detail": "A cafeteria alarm triggers during lunch service. The workflow shows assignment, status change, and audit tracking.",
+    },
+]
 
-def inject_styles() -> None:
+PRESENTATION_STEPS = [
+    ("Create the team", "Add Student, Responder, and Admin users to show role-based access."),
+    ("Report an incident", "Submit a realistic issue with title, description, reporter, and campus zone."),
+    ("Assign response", "Use the Response Center to route active work from an Admin to a Responder."),
+    ("Close the loop", "Update status and review audit history to prove the backend recorded the action."),
+]
+
+
+def visual_theme() -> dict[str, str]:
+    if st.session_state.get("dark_mode", False):
+        return {
+            "plot_text": "#eaf3f6",
+            "plot_grid": "rgba(226, 238, 242, 0.12)",
+            "mode": "Dark",
+        }
+    return {
+        "plot_text": "#18212f",
+        "plot_grid": "rgba(93, 112, 128, 0.15)",
+        "mode": "Light",
+    }
+
+
+def inject_styles(theme_mode: str = "Light") -> None:
     st.markdown(
         """
         <style>
@@ -212,6 +254,10 @@ def inject_styles() -> None:
         .hero-shell {
             position: relative;
             overflow: hidden;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(260px, 340px);
+            gap: clamp(1rem, 2vw, 1.5rem);
+            align-items: center;
             border: 1px solid rgba(196, 214, 222, 0.88);
             border-radius: 8px;
             background:
@@ -240,6 +286,50 @@ def inject_styles() -> None:
             position: relative;
             z-index: 1;
             max-width: 850px;
+        }
+
+        .hero-insight-card {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid rgba(184, 207, 216, 0.8);
+            border-radius: 8px;
+            box-shadow: var(--shadow-soft);
+            padding: 1rem;
+        }
+
+        .hero-insight-kicker {
+            color: var(--accent);
+            font-size: 0.72rem;
+            font-weight: 950;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 0.65rem;
+        }
+
+        .hero-insight-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.8rem;
+            padding: 0.62rem 0;
+            border-top: 1px solid rgba(184, 207, 216, 0.72);
+        }
+
+        .hero-insight-row:first-of-type {
+            border-top: none;
+        }
+
+        .hero-insight-label {
+            color: var(--muted);
+            font-size: 0.82rem;
+            line-height: 1.35;
+        }
+
+        .hero-insight-value {
+            color: var(--ink);
+            font-weight: 950;
+            white-space: nowrap;
         }
 
         .app-kicker {
@@ -536,6 +626,134 @@ def inject_styles() -> None:
             line-height: 1.52;
         }
 
+        .presentation-hero {
+            border: 1px solid rgba(196, 214, 222, 0.88);
+            border-radius: 8px;
+            background:
+                linear-gradient(120deg, rgba(255, 255, 255, 0.98), rgba(239, 247, 250, 0.96)),
+                linear-gradient(90deg, rgba(22, 121, 140, 0.12), rgba(47, 157, 104, 0.08));
+            box-shadow: var(--shadow);
+            padding: clamp(1.05rem, 2vw, 1.45rem);
+            margin: 0.6rem 0 1rem;
+        }
+
+        .presentation-title {
+            color: var(--ink);
+            font-size: clamp(1.35rem, 2.5vw, 2.05rem);
+            font-weight: 950;
+            line-height: 1.15;
+            margin-bottom: 0.4rem;
+        }
+
+        .presentation-copy {
+            color: var(--muted);
+            max-width: 850px;
+            line-height: 1.58;
+        }
+
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.85rem;
+            margin-top: 0.85rem;
+        }
+
+        .scenario-card {
+            background: #ffffff;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            box-shadow: var(--shadow-soft);
+            padding: 1rem;
+            min-height: 190px;
+        }
+
+        .scenario-zone {
+            color: var(--accent);
+            font-size: 0.72rem;
+            font-weight: 950;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 0.45rem;
+        }
+
+        .scenario-title {
+            color: var(--ink);
+            font-size: 1.05rem;
+            font-weight: 950;
+            line-height: 1.28;
+            margin-bottom: 0.42rem;
+        }
+
+        .scenario-role {
+            display: inline-flex;
+            border: 1px solid #c6dde4;
+            background: #eef7f8;
+            color: var(--accent);
+            border-radius: 999px;
+            padding: 0.2rem 0.55rem;
+            font-size: 0.75rem;
+            font-weight: 900;
+            margin-bottom: 0.62rem;
+        }
+
+        .scenario-detail {
+            color: var(--muted);
+            font-size: 0.9rem;
+            line-height: 1.52;
+        }
+
+        .story-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 0.75rem;
+            margin-top: 0.85rem;
+        }
+
+        .story-step {
+            background: rgba(255, 255, 255, 0.94);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            box-shadow: var(--shadow-soft);
+            padding: 0.95rem;
+        }
+
+        .story-number {
+            width: 1.8rem;
+            height: 1.8rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            color: #ffffff;
+            background: linear-gradient(180deg, var(--accent), #0f6474);
+            font-weight: 950;
+            font-size: 0.78rem;
+            margin-bottom: 0.62rem;
+        }
+
+        .story-title {
+            color: var(--ink);
+            font-weight: 950;
+            line-height: 1.25;
+            margin-bottom: 0.25rem;
+        }
+
+        .story-copy {
+            color: var(--muted);
+            font-size: 0.88rem;
+            line-height: 1.48;
+        }
+
+        .premium-note {
+            background: linear-gradient(120deg, rgba(22, 121, 140, 0.10), rgba(47, 157, 104, 0.08));
+            border: 1px solid #bcd7df;
+            border-radius: 8px;
+            padding: 0.9rem 1rem;
+            color: var(--ink-2);
+            font-weight: 750;
+            line-height: 1.55;
+        }
+
         .incident-card {
             background: #ffffff;
             border: 1px solid var(--line);
@@ -709,6 +927,7 @@ def inject_styles() -> None:
             }
 
             .hero-shell {
+                grid-template-columns: 1fr;
                 padding: 1.05rem;
             }
 
@@ -717,7 +936,9 @@ def inject_styles() -> None:
             }
 
             .step-row,
-            .zone-grid {
+            .zone-grid,
+            .scenario-grid,
+            .story-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -727,7 +948,9 @@ def inject_styles() -> None:
         }
 
         @media (min-width: 801px) and (max-width: 1120px) {
-            .zone-grid {
+            .zone-grid,
+            .scenario-grid,
+            .story-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
         }
@@ -735,6 +958,125 @@ def inject_styles() -> None:
         """,
         unsafe_allow_html=True,
     )
+    if theme_mode == "Dark":
+        st.markdown(
+            """
+            <style>
+            :root {
+                --ink: #edf7fb;
+                --ink-2: #d7e7ee;
+                --muted: #9fb1be;
+                --line: #29404d;
+                --panel: #14222d;
+                --panel-soft: #101b24;
+                --wash: #0d151d;
+                --accent: #5cc8d7;
+                --accent-2: #74d7bd;
+                --danger: #ff806f;
+                --amber: #f0bb4c;
+                --green: #72d39b;
+                --blue: #82a4ff;
+                --shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+                --shadow-soft: 0 12px 28px rgba(0, 0, 0, 0.22);
+            }
+
+            .stApp {
+                background:
+                    linear-gradient(135deg, rgba(92, 200, 215, 0.12) 0%, transparent 34%),
+                    linear-gradient(180deg, #0c141c 0%, #101a23 100%);
+                color: var(--ink);
+            }
+
+            header[data-testid="stHeader"] {
+                background: rgba(12, 20, 28, 0.86);
+                border-bottom-color: rgba(55, 80, 94, 0.72);
+            }
+
+            [data-testid="stSidebar"] {
+                background: linear-gradient(180deg, #101a23 0%, #0d151d 100%);
+                border-right-color: var(--line);
+            }
+
+            [data-testid="stSidebar"] label[data-baseweb="radio"],
+            .sidebar-brand,
+            .sidebar-stat,
+            .metric-card,
+            .panel,
+            .empty-state,
+            .zone-card,
+            .incident-card,
+            .scenario-card,
+            .story-step {
+                background: rgba(20, 34, 45, 0.92) !important;
+                border-color: var(--line) !important;
+            }
+
+            [data-testid="stSidebar"] label[data-baseweb="radio"]:has(input:checked) {
+                background: rgba(92, 200, 215, 0.12) !important;
+                border-color: rgba(92, 200, 215, 0.42) !important;
+            }
+
+            .hero-shell,
+            .presentation-hero {
+                background:
+                    linear-gradient(110deg, rgba(20, 34, 45, 0.98), rgba(18, 45, 54, 0.92) 62%, rgba(12, 25, 34, 0.94)),
+                    linear-gradient(90deg, rgba(92, 200, 215, 0.12), rgba(116, 215, 189, 0.08));
+                border-color: var(--line);
+            }
+
+            .hero-insight-card {
+                background: rgba(13, 24, 33, 0.72);
+                border-color: var(--line);
+            }
+
+            .hero-pill,
+            .scenario-role,
+            .metric-icon,
+            .zone-index {
+                background: rgba(92, 200, 215, 0.12);
+                border-color: rgba(92, 200, 215, 0.35);
+                color: var(--accent);
+            }
+
+            .welcome-band {
+                background:
+                    linear-gradient(120deg, rgba(9, 17, 24, 0.98), rgba(15, 52, 62, 0.94)),
+                    linear-gradient(90deg, rgba(92, 200, 215, 0.18), rgba(116, 215, 189, 0.12));
+                border-color: var(--line);
+            }
+
+            .premium-note {
+                background: rgba(92, 200, 215, 0.10);
+                border-color: rgba(92, 200, 215, 0.32);
+                color: var(--ink-2);
+            }
+
+            .stTextInput input,
+            .stTextArea textarea,
+            [data-baseweb="select"] > div {
+                background-color: #101a23;
+                border-color: var(--line);
+                color: var(--ink);
+            }
+
+            .stTabs [data-baseweb="tab"] {
+                background: #14222d;
+                border-color: var(--line);
+                color: var(--ink-2);
+            }
+
+            .stTabs [aria-selected="true"] {
+                background: rgba(92, 200, 215, 0.12);
+                border-color: rgba(92, 200, 215, 0.42);
+            }
+
+            div[data-testid="stDataFrame"] {
+                border-color: var(--line);
+            }
+            </style>
+            """,
+            unsafe_allow_html=True,
+        )
 
 
 @st.cache_resource
@@ -965,8 +1307,8 @@ def render_header(snapshot: dict[str, pd.DataFrame]) -> None:
                 <div class="app-kicker">University Safety Operations</div>
                 <h1 class="hero-title">Campus Incident Command</h1>
                 <p class="app-subtitle">
-                    A calm, focused workspace for reporting incidents, assigning responders,
-                    and monitoring campus risk across priority zones.
+                    Premium incident operations dashboard for campus safety: report issues,
+                    assign responders, analyze zones, and present the workflow clearly.
                 </p>
                 <div class="hero-meta-row">
                     <span class="hero-pill"><span class="hero-pill-dot"></span>Live workspace</span>
@@ -975,6 +1317,25 @@ def render_header(snapshot: dict[str, pd.DataFrame]) -> None:
                     <span class="hero-pill">Updated {escape(datetime.now().strftime("%b %d, %H:%M"))}</span>
                 </div>
             </div>
+            <aside class="hero-insight-card">
+                <div class="hero-insight-kicker">Executive Snapshot</div>
+                <div class="hero-insight-row">
+                    <span class="hero-insight-label">Operational posture</span>
+                    <span class="hero-insight-value">Ready</span>
+                </div>
+                <div class="hero-insight-row">
+                    <span class="hero-insight-label">Resolution rate</span>
+                    <span class="hero-insight-value">{counts["resolution"]}</span>
+                </div>
+                <div class="hero-insight-row">
+                    <span class="hero-insight-label">Campus zones</span>
+                    <span class="hero-insight-value">{len(ZONE_OPTIONS)}</span>
+                </div>
+                <div class="hero-insight-row">
+                    <span class="hero-insight-label">Backend source</span>
+                    <span class="hero-insight-value">FastAPI</span>
+                </div>
+            </aside>
         </section>
         """,
         unsafe_allow_html=True,
@@ -1070,7 +1431,40 @@ def render_zone_overview() -> None:
     st.markdown(f'<div class="zone-grid">{"".join(cards)}</div>', unsafe_allow_html=True)
 
 
-def render_sidebar(snapshot: dict[str, pd.DataFrame]) -> str:
+def render_example_scenarios() -> None:
+    cards = []
+    for scenario in EXAMPLE_SCENARIOS:
+        cards.append(
+            (
+                '<div class="scenario-card">'
+                f'<div class="scenario-zone">{escape(scenario["zone"])}</div>'
+                f'<div class="scenario-title">{escape(scenario["title"])}</div>'
+                f'<div class="scenario-role">{escape(scenario["role"])}</div>'
+                f'<div class="scenario-detail">{escape(scenario["detail"])}</div>'
+                "</div>"
+            )
+        )
+    st.markdown(f'<div class="scenario-grid">{"".join(cards)}</div>', unsafe_allow_html=True)
+
+
+def render_presentation_steps() -> None:
+    steps = []
+    for index, (title, copy) in enumerate(PRESENTATION_STEPS, start=1):
+        steps.append(
+            (
+                '<div class="story-step">'
+                f'<div class="story-number">{index}</div>'
+                f'<div class="story-title">{escape(title)}</div>'
+                f'<div class="story-copy">{escape(copy)}</div>'
+                "</div>"
+            )
+        )
+    st.markdown(f'<div class="story-grid">{"".join(steps)}</div>', unsafe_allow_html=True)
+
+
+def render_sidebar(snapshot: dict[str, pd.DataFrame]) -> tuple[str, str]:
+    if "dark_mode" not in st.session_state:
+        st.session_state.dark_mode = False
     counts = snapshot_counts(snapshot)
     st.sidebar.markdown(
         f"""
@@ -1094,9 +1488,13 @@ def render_sidebar(snapshot: dict[str, pd.DataFrame]) -> str:
     )
     page = st.sidebar.radio(
         "Go to",
-        ["Dashboard", "Report Incident", "Response Center", "People & Audit"],
+        ["Dashboard", "Report Incident", "Response Center", "People & Audit", "Presentation Guide"],
         label_visibility="collapsed",
     )
+    st.sidebar.markdown('<div class="sidebar-label">Appearance</div>', unsafe_allow_html=True)
+    dark_mode = st.sidebar.toggle("Dark mode", key="dark_mode")
+    theme_mode = "Dark" if dark_mode else "Light"
+    st.sidebar.caption(f"{theme_mode} mode is applied instantly.")
     st.sidebar.markdown('<div class="sidebar-label">Workspace</div>', unsafe_allow_html=True)
     if st.sidebar.button("Refresh data", width="stretch"):
         st.cache_data.clear()
@@ -1110,7 +1508,7 @@ def render_sidebar(snapshot: dict[str, pd.DataFrame]) -> str:
             except Exception as exc:
                 st.error(f"Demo data could not be loaded: {exc}")
     st.sidebar.caption("SQLite storage is created automatically on first run.")
-    return page
+    return page, theme_mode
 
 
 def render_incident_card(row: pd.Series) -> None:
@@ -1141,6 +1539,7 @@ def dashboard(snapshot: dict[str, pd.DataFrame]) -> None:
     analytics = snapshot["analytics"]
 
     counts = snapshot_counts(snapshot)
+    theme = visual_theme()
 
     render_section_heading("Overview", "Command Dashboard", "Monitor active work, response capacity, and campus risk at a glance.")
     cols = st.columns(4)
@@ -1156,6 +1555,8 @@ def dashboard(snapshot: dict[str, pd.DataFrame]) -> None:
 
     if incidents.empty:
         render_welcome_empty_dashboard()
+        render_section_heading("Demo examples", "Presentation Scenarios", "Use these examples to explain how the system works before loading demo data.")
+        render_example_scenarios()
         render_section_heading("Coverage", "Campus Zones", "The app groups reports into these operational zones for faster triage.")
         render_zone_overview()
         return
@@ -1185,8 +1586,10 @@ def dashboard(snapshot: dict[str, pd.DataFrame]) -> None:
             showlegend=False,
             plot_bgcolor="rgba(0,0,0,0)",
             paper_bgcolor="rgba(0,0,0,0)",
-            font=dict(color="#18212f"),
+            font=dict(color=theme["plot_text"]),
             bargap=0.36,
+            xaxis=dict(gridcolor=theme["plot_grid"]),
+            yaxis=dict(gridcolor=theme["plot_grid"]),
         )
         fig.update_traces(textposition="outside", marker_line_width=0, marker_cornerradius=7)
         st.plotly_chart(fig, width="stretch")
@@ -1205,7 +1608,7 @@ def dashboard(snapshot: dict[str, pd.DataFrame]) -> None:
             height=360,
             margin=dict(l=10, r=10, t=20, b=10),
             paper_bgcolor="rgba(0,0,0,0)",
-            font=dict(color="#18212f"),
+            font=dict(color=theme["plot_text"]),
             legend=dict(orientation="h", y=-0.08),
         )
         st.plotly_chart(fig, width="stretch")
@@ -1250,6 +1653,9 @@ def dashboard(snapshot: dict[str, pd.DataFrame]) -> None:
             hide_index=True,
             width="stretch",
         )
+
+    render_section_heading("Demo examples", "Presentation Scenarios", "Prepared use cases for walking stakeholders through the workflow.")
+    render_example_scenarios()
 
 
 def report_incident(snapshot: dict[str, pd.DataFrame]) -> None:
@@ -1529,10 +1935,84 @@ def people_and_audit(snapshot: dict[str, pd.DataFrame]) -> None:
             st.dataframe(display, hide_index=True, width="stretch")
 
 
+def presentation_guide(snapshot: dict[str, pd.DataFrame]) -> None:
+    counts = snapshot_counts(snapshot)
+    render_section_heading(
+        "Presentation",
+        "Demo Guide",
+        "A ready-made storyline for explaining the app clearly during a project presentation.",
+    )
+    st.markdown(
+        f"""
+        <section class="presentation-hero">
+            <div class="presentation-title">Show the product as an operational command center, not a code demo.</div>
+            <div class="presentation-copy">
+                Start with the dashboard, load demo data if needed, then walk through reporting,
+                assignment, status updates, analytics, and the audit trail. Current workspace:
+                {counts["total"]} incidents, {counts["active"]} active, {counts["responders"]} responders.
+            </div>
+        </section>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    story_tab, scenario_tab, checklist_tab = st.tabs(["Storyline", "Example Incidents", "Presenter Checklist"])
+
+    with story_tab:
+        render_section_heading("Flow", "Four-step demo story", "This sequence demonstrates every major backend capability.")
+        render_presentation_steps()
+        st.markdown(
+            """
+            <div class="premium-note">
+                Suggested opener: "This dashboard helps a campus operations team move from
+                incident discovery to assigned response and auditable closure in one place."
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with scenario_tab:
+        render_section_heading("Examples", "Ready-to-present scenarios", "Use these sample incidents to make the workflow concrete.")
+        render_example_scenarios()
+        render_section_heading("Coverage", "Campus zone model", "Spatial grouping keeps the operational view simple and easy to explain.")
+        render_zone_overview()
+
+    with checklist_tab:
+        left, right = st.columns(2, gap="large")
+        with left:
+            st.markdown(
+                """
+                <div class="panel">
+                    <div class="section-eyebrow">Before presenting</div>
+                    <div class="section-copy">
+                        Use <strong>Load demo workspace</strong> if the deployed database is empty.
+                        Confirm the sidebar theme toggle works and open the Dashboard first.
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+            render_empty_state("Best first click", "Open Dashboard, show the executive snapshot, then switch between light and dark mode.")
+        with right:
+            st.markdown(
+                """
+                <div class="panel">
+                    <div class="section-eyebrow">What to emphasize</div>
+                    <div class="section-copy">
+                        Role validation, H3 campus zones, incident assignment, status tracking,
+                        analytics, and audit history are all connected to the existing backend.
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+            render_empty_state("Closing point", "Finish on People & Audit to show that operational actions are traceable.")
+
+
 def main() -> None:
-    inject_styles()
     snapshot = load_snapshot()
-    page = render_sidebar(snapshot)
+    page, theme_mode = render_sidebar(snapshot)
+    inject_styles(theme_mode)
     render_header(snapshot)
 
     if page == "Dashboard":
@@ -1541,8 +2021,10 @@ def main() -> None:
         report_incident(snapshot)
     elif page == "Response Center":
         response_center(snapshot)
-    else:
+    elif page == "People & Audit":
         people_and_audit(snapshot)
+    else:
+        presentation_guide(snapshot)
 
 
 if __name__ == "__main__":

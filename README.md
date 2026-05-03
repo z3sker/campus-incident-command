@@ -8,7 +8,8 @@ A polished Streamlit command-center frontend for the University Incident Managem
 - Reports campus incidents by zone with backend role validation.
 - Assigns incidents to responders and moves work through Reported, In Progress, and Closed states.
 - Shows dashboard metrics, status charts, zone concentration, incident queues, and audit logs.
-- Includes a presentation-ready dashboard design with responsive spacing, polished cards, clear empty states, styled forms, and readable tables.
+- Includes a premium presentation-ready dashboard with responsive spacing, polished cards, clear empty states, styled forms, readable tables, and light/dark appearance modes.
+- Provides a dedicated Presentation Guide with demo scenarios, a suggested walkthrough, and presenter talking points.
 - Uses SQLite for local storage and automatically creates the database tables on first run.
 
 ## Tech Stack
@@ -41,7 +42,7 @@ Start the Streamlit app:
 streamlit run app.py
 ```
 
-The app will open at `http://localhost:8501`. Use the sidebar button `Load demo workspace` if you want sample users and incidents.
+The app will open at `http://localhost:8501`. Use the sidebar button `Load demo workspace` if you want sample users and incidents, and use the `Dark mode` sidebar toggle for presentation lighting.
 
 ## Backend API
 
